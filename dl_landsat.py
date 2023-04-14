@@ -8,22 +8,10 @@ from ee.batch import Export
 from osgeo import gdal
 from osgeo.gdal import Dataset
 
-LANDSAT_8 = "LANDSAT/LC08/C02/T1_L2"
-LANDSAT_8_START = 2014
-LANDSAT_8_END = 2021
-
-
-def apply_scale_factors_57(image):
-    # Magic numbers from GEE
-    optical_bands = image.select('SR_B.').multiply(0.0000275).add(-0.2)
-    thermal_dands = image.select('ST_B6').multiply(0.00341802).add(149.0)
-
-    image = (image.addBands(optical_bands, None, True)
-             .addBands(thermal_dands, None, True))
-    image = (image.select(["SR_B1", "SR_B2", "SR_B3", "SR_B4", "SR_B5", "SR_B7", "ST_B6", "QA_PIXEL"])
-             .rename(["B1", "B2", "B3", "B4", "B5", "B7", "ST", "QA_PIXEL"]))
-    return image
-
+LANDSAT_8 = "LANDSAT/LC08/C02/T1"
+# T1_L2 = surface reflectance, T1 = raw landsat
+# For grabbing panchromatic band, comment out thermal_bands and lines below image.addBands(optical_bands) .
+# Change image.select to 'B8'
 
 def apply_scale_factors_8(image):
     # Magic numbers from GEE
@@ -36,6 +24,13 @@ def apply_scale_factors_8(image):
              .rename(["B1", "B2", "B3", "B4", "B5", "B7", "ST", "QA_PIXEL"]))
     return image
 
+def apply_scale_factors_8_pan(image):
+    # Magic numbers from GEE
+    optical_bands = image.select('B8').multiply(0.0000275).add(-0.2)
+
+    image = image.addBands(optical_bands, None, True)
+             
+    return image
 
 def mask_clouds(image):
     qa = image.select("QA_PIXEL")
@@ -94,7 +89,7 @@ def export_to_drive(city_coords, years=None, months=None,
         for month in months:
             if ls_read is None:
                 ls_read = (ee.ImageCollection(LANDSAT_8)
-                           .map(apply_scale_factors_8)
+                           .map(apply_scale_factors_8_pan)
                            .filterBounds(city)
                            .filter(ee.Filter.calendarRange(year, year + 1, "year"))
                            .filter(ee.Filter.calendarRange(month, month + 1, "month"))
@@ -102,7 +97,7 @@ def export_to_drive(city_coords, years=None, months=None,
                            )
             else:
                 ls_read_ = (ee.ImageCollection(LANDSAT_8)
-                            .map(apply_scale_factors_8)
+                            .map(apply_scale_factors_8_pan)
                             .filterBounds(city)
                             .filter(ee.Filter.calendarRange(year, year + 1, "year"))
                             .filter(ee.Filter.calendarRange(month, month + 1, "month"))
@@ -177,13 +172,14 @@ def export_to_numpy(years, base_folder_name, band_list):
 # HongKong: 114.1694, 22.3193
 # Fuji-City: 138.7034785, 35.160328
 
-
+# nairobi center: 36.74905523581975, -1.2815372605877613
+# nairobi east: 36.86905523581975, -1.2815372605877613 
 if __name__ == '__main__':
-    base_folder_name = "nairobi_images_summer"
-    years = list(range(2013, 2021))
-    point = [36.74905523581975, -1.2815372605877613]
-    #export_to_drive(point, base_folder_name=base_folder_name, years=years)
+    base_folder_name = "nairobi_images_36-86_1-28_raw"
+    years = list(range(2013, 2022))
+    point = [36.86905523581975, -1.2815372605877613]
+    export_to_drive(point, base_folder_name=base_folder_name, years=years)
 
     # Note it is adivable to inspect the data with QGis beforehand and they need to be downloaded from Gdrive
-    band_list = [1, 2, 3, 4, 5, 6, 7, 8]
+    band_list = [1, 8]
     export_to_numpy(years, base_folder_name, band_list)

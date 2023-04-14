@@ -41,7 +41,7 @@ def main(coordinates, base_dir, raw_data_dir):
 
     geometry = tuple([tuple(x) for x in bounds.coordinates().getInfo()[0]])
     geometry = Polygon(geometry)
-    #
+    # change to authenticate_non_interactive(username, password) if it doesnt work
     catalogue = Catalogue().authenticate()
 
     products = catalogue.get_products("urn:eop:VITO:ESA_WorldCover_10m_2020_V1", geometry=geometry)
@@ -84,5 +84,5 @@ def main(coordinates, base_dir, raw_data_dir):
 
 
 if __name__ == '__main__':
-    coords = [36.74905523581975, -1.2815372605877613]
-    main(coords, 'data/nairobi_images_summer', 'data/nairobi_images_summer/data_raw.npy')
+    coords = [36.86905523581975, -1.2815372605877613]
+    main(coords, 'data/nairobi_images_36-86_1-28', 'data/nairobi_images_36-86_1-28/data_raw.npy')
