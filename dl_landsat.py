@@ -8,7 +8,7 @@ from ee.batch import Export
 from osgeo import gdal
 from osgeo.gdal import Dataset
 
-LANDSAT_8 = "LANDSAT/LC08/C02/T1"
+LANDSAT_8 = "LANDSAT/LC08/C02/T1_L2"
 # T1_L2 = surface reflectance, T1 = raw landsat
 # For grabbing panchromatic band, comment out thermal_bands and lines below image.addBands(optical_bands) .
 # Change image.select to 'B8'
@@ -89,7 +89,7 @@ def export_to_drive(city_coords, years=None, months=None,
         for month in months:
             if ls_read is None:
                 ls_read = (ee.ImageCollection(LANDSAT_8)
-                           .map(apply_scale_factors_8_pan)
+                           .map(apply_scale_factors_8)
                            .filterBounds(city)
                            .filter(ee.Filter.calendarRange(year, year + 1, "year"))
                            .filter(ee.Filter.calendarRange(month, month + 1, "month"))
@@ -97,7 +97,7 @@ def export_to_drive(city_coords, years=None, months=None,
                            )
             else:
                 ls_read_ = (ee.ImageCollection(LANDSAT_8)
-                            .map(apply_scale_factors_8_pan)
+                            .map(apply_scale_factors_8)
                             .filterBounds(city)
                             .filter(ee.Filter.calendarRange(year, year + 1, "year"))
                             .filter(ee.Filter.calendarRange(month, month + 1, "month"))
@@ -166,20 +166,29 @@ def export_to_numpy(years, base_folder_name, band_list):
 
 # Tokyo: 139.6503, 35.6762
 # Pohang-si: 129.3145, 36.0030 (Works)
-# Bangkok: 100.5018, 13.7563 (Sadly Poor data in 1984)
-# Hanoi: 105.8342 21.0278
-# Shenzhen: 114.0596, 22.5429
-# HongKong: 114.1694, 22.3193
-# Fuji-City: 138.7034785, 35.160328
 
 # nairobi center: 36.74905523581975, -1.2815372605877613
 # nairobi east: 36.86905523581975, -1.2815372605877613 
+# Accra Ghana: -0.1870, 5.6037 (try a bit further north)
+# Athi river Kenya: 36.9785, -1.4577
+# Cape Town South Africa: 18.655297, -33.991888
+# Dar es salaam Tanzania: 39.266257, -6.836356
+# Davao PH: 125.567598, 7.052342
+# Freetown Sierra Leone: -13.248984, 8.483229
+# Kampala Uganada: 32.584486, 0.323141
+# Kisumu Kenya: 34.769850, -0.095443
+# Lagos Nigeria: 3.351209, 6.421560
+# Malabon PH: 120.960334, 14.665835
+# My house: 121.005953, 14.479313
+# Port Harcourt Nigeria: 7.031628, 4.761043
+# Tamagawa River 139.635918, 35.601604
+
 if __name__ == '__main__':
-    base_folder_name = "nairobi_images_36-86_1-28_raw"
+    base_folder_name = "lagos_images"
     years = list(range(2013, 2022))
-    point = [36.86905523581975, -1.2815372605877613]
+    point = [3.351209, 6.421560]
     export_to_drive(point, base_folder_name=base_folder_name, years=years)
 
     # Note it is adivable to inspect the data with QGis beforehand and they need to be downloaded from Gdrive
-    band_list = [1, 8]
+    band_list = [1, 2, 3, 4, 5, 6, 7, 8]
     export_to_numpy(years, base_folder_name, band_list)

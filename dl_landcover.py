@@ -84,5 +84,5 @@ def main(coordinates, base_dir, raw_data_dir):
 
 
 if __name__ == '__main__':
-    coords = [36.86905523581975, -1.2815372605877613]
-    main(coords, 'data/nairobi_images_36-86_1-28', 'data/nairobi_images_36-86_1-28/data_raw.npy')
+    coords = [3.351209, 6.421560]
+    main(coords, 'data/lagos_images', 'data/lagos_images/data_raw.npy')
