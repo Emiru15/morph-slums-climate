@@ -183,10 +183,12 @@ def export_to_numpy(years, base_folder_name, band_list):
 # Port Harcourt Nigeria: 7.031628, 4.761043
 # Tamagawa River 139.635918, 35.601604
 
+# Caracas -66.8032216, 10.4692009
+
 if __name__ == '__main__':
-    base_folder_name = "lagos_images"
+    base_folder_name = "caracas_images"
     years = list(range(2013, 2022))
-    point = [3.351209, 6.421560]
+    point = [-66.8032216, 10.4692009]
     export_to_drive(point, base_folder_name=base_folder_name, years=years)
 
     # Note it is adivable to inspect the data with QGis beforehand and they need to be downloaded from Gdrive

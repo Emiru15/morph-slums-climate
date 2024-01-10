@@ -42,7 +42,7 @@ def main(coordinates, base_dir, raw_data_dir):
     geometry = tuple([tuple(x) for x in bounds.coordinates().getInfo()[0]])
     geometry = Polygon(geometry)
     # change to authenticate_non_interactive(username, password) if it doesnt work
-    catalogue = Catalogue().authenticate()
+    catalogue = Catalogue().authenticate_non_interactive("Friday15", "Vanilla:coke05")
 
     products = catalogue.get_products("urn:eop:VITO:ESA_WorldCover_10m_2020_V1", geometry=geometry)
     catalogue.download_products(products, f"{base_dir}")
@@ -84,5 +84,5 @@ def main(coordinates, base_dir, raw_data_dir):
 
 
 if __name__ == '__main__':
-    coords = [3.351209, 6.421560]
-    main(coords, 'data/lagos_images', 'data/lagos_images/data_raw.npy')
+    coords = [-66.8032216, 10.4692009]
+    main(coords, 'data/caracas_images', 'data/caracas_images/data_raw.npy')
