@@ -1,4 +1,4 @@
-# Remote Sensing Landuse
+# Evaluation of climate risks on satellite-detected morphological slums of 10 municipalities
 This repository, specifically this branch, was used in the completion of my Master's Thesis entitled "Evaluation of climate risks on satellite-detected morphological slums of 10 municipalities" under the Global Urban Climate Studies Laboratory at Tokyo Institute of Technology. This uses Landsat 8 bands and ESA WorldCover 2021 data to cluster urban build-up pixels of morphological slums in the given study areas. The shapefiles of the slum zones were kindly provided by Dr. Dana Thomson and her team found here: https://github.com/hazemmahmoud88/KnowYourCity-data-for-research.
 
 Next, CMORPH precipitation data and WRF simulations were used to calculate the potential extreme climate hazard values for each morphological slum cluster. Finally, the overall climate risk of each of the study areas were evaluated using the variables stated in my thesis, forming the risk equation.
